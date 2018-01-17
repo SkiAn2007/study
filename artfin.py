@@ -7,6 +7,7 @@ rangedata = []
 maskalist = []
 calc = 0
 
+
 def maincheck(oktet):
     good = 0
     try:
@@ -19,6 +20,7 @@ def maincheck(oktet):
         good = 1
     return good
 
+
 def bit2dec(bit):
     otvet = 0
     bit = 8 - int(bit)
@@ -26,16 +28,16 @@ def bit2dec(bit):
         otvet += (2 ** bitt)
     return int(otvet)
 
+
 def checkoktet(oktet):
     otvet = 0
     good = maincheck(oktet)
-    if (good == 1):
+    if (good):
         temp = int(oktet)
         if ((temp >= 0) and (temp <= 255)):
             otvet = 1
-    else:
-        otvet = 0
     return int(otvet)
+
 
 def checkrange2(iprange2):
     ipstr = ''
@@ -52,24 +54,24 @@ def checkrange2(iprange2):
     else:
         print("unknown")
 
+
 def checkrange(oktet):
     data = str(oktet)
     rangeflag = 0
     otvet = 0
-    otvet1 = 0
-    otvet2 = 0
     rangeflag = oktet.count('-')
     if (rangeflag == 1):
         res = data.split('-')
         if (checkoktet(res[0]) == 1):
-            otvet1 = 1
+            otvet += 1
             rangeip.append(int(res[0]))
         if (checkoktet(res[1]) == 1):
-            otvet2 = 1
+            otvet += 1
             rangeip.append(int(res[1]))
-    if ((otvet1 + otvet2) == 2):
+    if (otvet == 2):
         otvet = 1
     return int(otvet)
+
 
 def checkmask2(bit):
     otvet = 0
@@ -90,25 +92,24 @@ def checkmask2(bit):
     else:
         return 0
 
+
 def checkmask(oktet):
     data = str(oktet)
     maskflag = 0
     otvet = 0
-    otvet1 = 0
-    otvet2 = 0
     maskflag = oktet.count('/')
     if (maskflag == 1):
         res = data.split('/')
         if (checkoktet(res[0]) == 1):
-            otvet1 = 1
+            otvet += 1
             maskalist.append(int(res[0]))
-            # calc += 1
         if (checkoktet(res[1]) == 1):
             if ((int(res[1]) >= 0) and (int(res[1]) <= 32)):
-                otvet2 = 1
-    if ((otvet1 + otvet2) == 2):
+                otvet += 1
+    if (otvet == 2):
         otvet = checkmask2(int(res[1]))
     return int(otvet)
+
 
 i = 0
 for args in sys.argv:
@@ -138,28 +139,26 @@ for args in sys.argv:
                 print('this is subnet')
             if ((calc < 4) and (flag == 0)):
                 print('unknown')
-            #print("calc: " + str(calc) + " flag: " + str(flag))
         if (len(inputdata) == 7):
             j = 0
             flag = 0
-            temp2 = []
             for okto in inputdata:
                 if (j == 3):
                     flag = okto.count('-')
                     if (flag == 1):
-                        temp2 = okto.split('-')
-                        if (checkoktet(temp2[0]) == 1):
-                            rangeip.append(int(temp2[0]))
-                        if (checkoktet(temp2[1]) == 1):
-                            rangeip.append(int(temp2[1]))
-                elif ((j != 3) and (checkoktet(okto))):
-                    calc += 1
+                        temp = okto.split('-')
+                        if (checkoktet(temp[0]) == 1):
+                            rangeip.append(int(temp[0]))
+                        if (checkoktet(temp[1]) == 1):
+                            rangeip.append(int(temp[1]))
+                elif ((j != 3) and (checkoktet(okto) == 1)):
                     rangeip.append(int(okto))
                 j += 1
             if (len(rangeip) == 8):
                 checkrange2(rangeip)
             else:
                 print("unknown")
+
         if ((len(inputdata) != 7) and (len(inputdata) != 4)):
             print('unknown')
     i += 1
